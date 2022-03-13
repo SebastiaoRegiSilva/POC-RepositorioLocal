@@ -1,16 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace POC_RepositorioLocal
 {
     /// <summary>
-    /// Prova prática de um conceito teórico.
+    /// Prova prática de um <c>conceito<c> teórico.
     /// </summary>
     class Program
     {
         static void Main(string[] args)
         {
-            
+            CriarArquivo(@"C:\CriarDiretorio","Testar", 
+                new List<string>(){
+                    "Lorem Ipsum",
+                    "Ave Maria",
+                    "Crein Deus Pai!",
+                    "Chumbo pesado",
+                    "Coendro de cevácia!",
+                });
+
         }
         
         /// <summary>
@@ -18,7 +27,7 @@ namespace POC_RepositorioLocal
         /// </summary>
         /// <param name="path">Caminho do diretório.</param>
         /// <param name="searchPattern">Tipo do arquivo para busca.</param>
-        public void ListarAquivosComFiltro(string path, string searchPattern)
+        public static void ListarAquivosComFiltro(string path, string searchPattern)
         {
             // O SearchOption.AllDirectories inclue também todos subdiretórios para uma busca completa.
             string[] arquivos = Directory.GetFiles(path, searchPattern, SearchOption.AllDirectories);
@@ -34,7 +43,7 @@ namespace POC_RepositorioLocal
         /// Listar todos os arquivos e diretórios existentes.
         /// </summary>
         /// <param name="path">Caminho do diretório.</param>
-        private void ListarTodasPastasArquivos(string path)
+        static void ListarTodasPastasArquivos(string path)
         {
             string[] diretorios = Directory.GetDirectories(path);
             string[] arquivos = Directory.GetFiles(path);
@@ -56,7 +65,7 @@ namespace POC_RepositorioLocal
         /// Criar diretório.
         /// </summary>
         /// <param name="path">Caminho do diretório.</param>
-        private void CriarDiretorio(string path)
+        static void CriarDiretorio(string path)
         {   
             var diretorio = new DirectoryInfo(path);
 
@@ -70,15 +79,25 @@ namespace POC_RepositorioLocal
         /// </summary>
         /// <param name="path">Caminho do arquivo.</param>
         /// <param name="nomeArquivo">Nome do arquivo.</param>
-        public string CriarArquivo(string path, string nomeArquivo)
-        {   
-            var arquivo = new FileInfo(nomeArquivo);
+        /// <param name="conteudo">Conteúdo do arquivo criado.</param>
+        public static void CriarArquivo(string path, string nomeArquivo, List<string> conteudo)
+        {
+            Console.WriteLine("Criando diretório!");
+            CriarDiretorio(path);
+            Console.WriteLine("Diretório criado!");
             
-            // Caso o arquivo não exista ele será criado.
-            if(!File.Exists(nomeArquivo))
-                File.Create(path, 150, FileOptions.WriteThrough);
+            string arquivo = Path.Combine(path, nomeArquivo);
 
-                return "Arquivo criado com sucesso!";
+            Console.WriteLine("Criando arquivo!");
+            if (!File.Exists(nomeArquivo)) 
+            {
+                // Create a file to write to.
+                using (StreamWriter sw = File.CreateText(arquivo)) 
+                    foreach (var item in conteudo)
+                        sw.WriteLine(item);
+            }
+
+            Console.WriteLine("Arquivo criado com sucesso!");
         }
     }
 }
