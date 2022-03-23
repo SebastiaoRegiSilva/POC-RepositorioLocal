@@ -13,15 +13,14 @@ namespace POC_RepositorioLocal
     {
         static void Main(string[] args)
         {
-            CriarArquivo(@"C:\xampp\htdocs\deletar\POC-RepositorioLocal\CriarDiretorio","Dados.txt", 
-                new List<string>(){
+            CriarArquivo(@"C:\Users\Willian Silva - Lobo\Desktop\C#\projetos\POC-RepositorioLocal\CriarDiretorio","Dados.cs", 
+                new List<byte>(){
                     "Lorem Ipsum",
                     "Ave Maria",
                     "Crein Deus Pai!",
                     "Chumbo pesado",
                     "Coendro de cevácia!",
                 });
-
         }
         
         /// <summary>
@@ -82,28 +81,21 @@ namespace POC_RepositorioLocal
         /// <param name="path">Caminho do arquivo.</param>
         /// <param name="nomeArquivo">Nome do arquivo.</param>
         /// <param name="conteudo">Conteúdo do arquivo criado.</param>
-        public static void CriarArquivo(string path, string nomeArquivo, List<string> conteudo)
+        public static void CriarArquivo(string path, string nomeArquivo, List<byte> conteudo)
         {
             Console.WriteLine("Criando diretório!");
             CriarDiretorio(path);
             Console.WriteLine("Diretório criado!");
-            
-            //string arquivo = Path.Combine(path, nomeArquivo);
 
-            // Erro de permissão para acesso a pasta. 
-            FileStream fs = new FileStream(path, FileMode.Append, FileAccess.Write);
-
-            StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
+            path = System.IO.Path.Combine(path, nomeArquivo);
             
-            Console.WriteLine("Criando arquivo!");
-            
-            sw.WriteLine(conteudo.First());
-            
-            sw.Flush();
-            sw.Close();
-            fs.Close();
-
-            Console.WriteLine("Arquivo criado com sucesso!");
+            using (System.IO.FileStream fs = new System.IO.FileStream(path, FileMode.Append))
+            {  
+                foreach (var i in conteudo)
+                {
+                    fs.WriteByte(i);
+                }
+            }  
         }
     }
 }
