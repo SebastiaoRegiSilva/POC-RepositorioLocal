@@ -1,17 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
+using System;
 
 namespace POC_RepositorioLocal
 {
     /// <summary>
-    /// Prova prática de um <c>conceito<c> teórico.
+    /// Prova prática de um conceito teórico.
     /// </summary>
     class Program
     {
         static void Main(string[] args)
         {
-            CriarArquivo(@"C:\CriarDiretorio","Testar", 
+            CriarArquivo(@"C:\xampp\htdocs\deletar\POC-RepositorioLocal\CriarDiretorio","Dados.txt", 
                 new List<string>(){
                     "Lorem Ipsum",
                     "Ave Maria",
@@ -86,16 +88,20 @@ namespace POC_RepositorioLocal
             CriarDiretorio(path);
             Console.WriteLine("Diretório criado!");
             
-            string arquivo = Path.Combine(path, nomeArquivo);
+            //string arquivo = Path.Combine(path, nomeArquivo);
 
+            // Erro de permissão para acesso a pasta. 
+            FileStream fs = new FileStream(path, FileMode.Append, FileAccess.Write);
+
+            StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
+            
             Console.WriteLine("Criando arquivo!");
-            if (!File.Exists(nomeArquivo)) 
-            {
-                // Create a file to write to.
-                using (StreamWriter sw = File.CreateText(arquivo)) 
-                    foreach (var item in conteudo)
-                        sw.WriteLine(item);
-            }
+            
+            sw.WriteLine(conteudo.First());
+            
+            sw.Flush();
+            sw.Close();
+            fs.Close();
 
             Console.WriteLine("Arquivo criado com sucesso!");
         }
